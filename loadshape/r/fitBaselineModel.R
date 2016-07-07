@@ -206,7 +206,9 @@ imputeTimeSeries = function(timeVec, yVec, xTime=NULL, xMat=NULL, outTimes=NULL,
   if (any(is.na(yOut))) {
     # Interpolate short runs of missing data.
     isNA = is.na(yOut)
-    runsNA = rle(isNA)
+    rl = rle(isNA)
+    runsNA = rep(rl$lengths, rl$lengths)
+    
     doInterp = which( runsNA$values==T & runsNA$lengths <= maxInterpLen )
     
     if (length(doInterp) > 0) {
@@ -362,7 +364,6 @@ prepareTimeSeries = function(inputDat, tStart=NULL, tEnd=NULL, intervalMinutes=N
       stop("No intervalMinutes was specified in prepareTimeSeries(), and one can't be determined.")
     }
   }  
-  
   
   timePoints = getTime(seq(from = as.numeric(tStart), to = as.numeric(tEnd), by = 60*intervalMinutes))
   
